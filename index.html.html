@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Destino | Páginas Web Autoadministrables para Turismo, Hotelería & Locales</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#0f1117',
+                            card: '#161922',
+                            cardHover: '#1f2430',
+                            border: '#262c3d',
+                            orange: '#f97316',
+                            orangeHover: '#ea580c',
+                            amber: '#f59e0b',
+                            whatsapp: '#25d366'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0f1117;
+            color: #f3f4f6;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f1117; }
+        ::-webkit-scrollbar-thumb { background: #262c3d; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #f97316; }
+    </style>
+</head>
+<body class="min-h-screen bg-[#0f1117] flex flex-col justify-between selection:bg-brand-orange selection:text-white">
+
+    <!-- Admin Banner Indicator -->
+    <div id="admin-banner" class="hidden bg-gradient-to-r from-brand-orange to-brand-amber text-black px-4 py-2 text-xs md:text-sm font-bold flex justify-between items-center z-50 sticky top-0 shadow-lg">
+        <div class="flex items-center gap-2">
+            <i class="fas fa-user-shield text-base"></i>
+            <span>MODO ADMINISTRADOR ACTIVO — Podés editar el número de WhatsApp y agregar maquetas en tiempo real.</span>
+        </div>
+        <div class="flex items-center gap-3">
+            <button onclick="openPhoneEditModal()" class="bg-black/20 hover:bg-black/40 text-black px-2 py-1 rounded text-xs transition-all flex items-center gap-1 font-semibold">
+                <i class="fab fa-whatsapp"></i> Editar Num. WhatsApp
+            </button>
+            <button onclick="logoutAdmin()" class="bg-black text-white px-3 py-1 rounded hover:bg-gray-900 transition-all text-xs font-semibold">
+                Cerrar Sesión
+            </button>
+        </div>
+    </div>
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-brand-bg/90 border-b border-brand-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a href="#inicio" class="flex items-center gap-3 group">
+                    <div class="w-11 h-11 bg-brand-orange text-white rounded-xl font-extrabold text-xl flex items-center justify-center shadow-lg shadow-brand-orange/30 group-hover:scale-105 transition-transform">
+                        WD
+                    </div>
+                    <div>
+                        <span class="text-xl font-extrabold tracking-tight text-white block">WEB <span class="text-brand-orange">DESTINO</span></span>
+                        <span id="nav-phone-display" class="text-xs text-gray-400 block font-medium"><i class="fab fa-whatsapp text-brand-whatsapp mr-1"></i>+54 9 11 5555-4444</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden lg:flex items-center gap-6 font-semibold text-xs xl:text-sm">
+                    <a href="#inicio" class="text-gray-300 hover:text-brand-orange transition-colors">Inicio</a>
+                    <a href="#ventajas" class="text-gray-300 hover:text-brand-orange transition-colors">Ventajas</a>
+                    <a href="#caracteristicas" class="text-gray-300 hover:text-brand-orange transition-colors">Características</a>
+                    <a href="#servicios" class="text-gray-300 hover:text-brand-orange transition-colors">Rubros</a>
+                    <a href="#maquetas" class="text-gray-300 hover:text-brand-orange transition-colors">Plantillas Demo</a>
+                    <a href="#faq" class="text-gray-300 hover:text-brand-orange transition-colors">Preguntas</a>
+                    <a href="#precios" class="text-gray-300 hover:text-brand-orange transition-colors">Planes</a>
+                </nav>
+
+                <!-- Admin Button & WhatsApp Action -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <button onclick="openAdminModal()" id="btn-admin-login" class="flex items-center gap-2 bg-brand-card hover:bg-brand-cardHover text-gray-200 border border-brand-border px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all hover:border-brand-orange">
+                        <i class="fas fa-lock text-brand-amber"></i>
+                        <span id="admin-btn-text" class="hidden sm:inline">Admin</span>
+                    </button>
+                    
+                    <a href="https://wa.me/5491155554444?text=Hola!%20Quiero%20consultar%20por%20una%20web%20autoadministrable%20para%20mi%20local/alojamiento." id="nav-whatsapp-link" target="_blank" class="flex items-center gap-2 bg-brand-whatsapp text-black px-4 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-lg shadow-brand-whatsapp/20 transition-all hover:scale-105">
+                        <i class="fab fa-whatsapp text-lg"></i>
+                        <span class="hidden sm:inline">Consultar Ahora</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="relative pt-12 pb-20 md:pt-20 md:pb-28 overflow-hidden">
+        <div class="max-w-5xl mx-auto px-4 text-center relative z-10">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-card border border-brand-orange/40 text-brand-orange text-xs sm:text-sm font-bold mb-8 shadow-inner">
+                <i class="fas fa-hotel"></i>
+                <span>DISEÑO WEB AUTOADMINISTRABLE PARA HOTELERÍA, TURISMO & COMERCIOS</span>
+            </div>
+
+            <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold text-white tracking-tight leading-[1.15] mb-6">
+                Diseño Web <br>
+                <span class="text-brand-orange">Autoadministrable</span>
+            </h1>
+
+            <p class="text-gray-300 text-base sm:text-xl max-w-3xl mx-auto mb-10 font-normal leading-relaxed">
+                Nuestra solución de <strong>diseño web autoadministrable</strong> es ideal para cabañas, hoteles, restaurantes y tiendas de recuerdos que buscan una presencia online profesional con control total de su contenido, sin depender de programadores.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#precios" class="w-full sm:w-auto flex items-center justify-center gap-3 bg-brand-orange hover:bg-brand-orangeHover text-white px-8 py-4 rounded-xl font-extrabold text-base transition-all shadow-lg shadow-brand-orange/20 hover:scale-105">
+                    <i class="fas fa-rocket"></i>
+                    <span>Ver Planes & Precios (25% Seña)</span>
+                </a>
+                <a href="#maquetas" class="w-full sm:w-auto flex items-center justify-center gap-2 bg-brand-card hover:bg-brand-cardHover border border-brand-border text-gray-200 px-6 py-4 rounded-xl font-bold text-base transition-all">
+                    <i class="fas fa-desktop text-brand-orange"></i>
+                    <span>Ver Demos Interactivas</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sugerencias a tener en cuenta previo a su contratación -->
+    <section id="ventajas" class="py-16 bg-brand-bg border-t border-brand-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <div class="inline-flex items-center gap-2 text-brand-orange text-xs font-bold uppercase tracking-wider mb-2">
+                    <i class="fas fa-lightbulb"></i> Diseño Web Autoadministrable
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Sugerencias a tener en cuenta previo a su contratación</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-brand-card border border-brand-border p-6 rounded-2xl flex items-start gap-4 hover:border-brand-orange/50 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-brand-orange/10 border border-brand-orange/20 text-brand-orange flex items-center justify-center text-xl shrink-0">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white mb-1">No utilizamos Plantillas Pre-diseñadas</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed">Estructura pensada específicamente para destacar los atractivos de tu alojamiento o negocio comercial.</p>
+                    </div>
+                </div>
+
+                <div class="bg-brand-card border border-brand-border p-6 rounded-2xl flex items-start gap-4 hover:border-brand-orange/50 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-brand-orange/10 border border-brand-orange/20 text-brand-orange flex items-center justify-center text-xl shrink-0">
+                        <i class="fas fa-pencil-ruler"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white mb-1">Diseño Web Autoadministrable a Medida</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed">Layout visualmente equilibrado para facilitar que la navegación del usuario sea clara y agradable.</p>
+                    </div>
+                </div>
+
+                <div class="bg-brand-card border border-brand-border p-6 rounded-2xl flex items-start gap-4 hover:border-brand-orange/50 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-brand-orange/10 border border-brand-orange/20 text-brand-orange flex items-center justify-center text-xl shrink-0">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white mb-1">Diseño Web Responsivo Multi-dispositivo</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed">Adaptabilidad total a celulares y tablets para brindar una experiencia fluida al turista durante su viaje.</p>
+                    </div>
+                </div>
+
+                <div class="bg-brand-card border border-brand-border p-6 rounded-2xl flex items-start gap-4 hover:border-brand-orange/50 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-brand-orange/10 border border-brand-orange/20 text-brand-orange flex items-center justify-center text-xl shrink-0">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white mb-1">Hosting y Servicios Bonificados por un año</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed">Servidor rápido, seguro y optimizado con alojamiento bonificado el primer año de servicio.</p>
+                    </div>
+                </div>
+
+                <div class="bg-brand-card border border-brand-border p-6 rounded-2xl flex items-start gap-4 hover:border-brand-orange/50 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-brand-orange/10 border border-brand-orange/20 text-brand-orange flex items-center justify-center text-xl shrink-0">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white mb-1">Certificado SSL Gratis por el 1° año</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed">Conexión cifrada HTTPS para infundir confianza en los visitantes al momento de enviar consultas o reservar.</p>
+                    </div>
+                </div>
+
+                <div class="bg-brand-card border border-brand-border p-6 rounded-2xl flex items-start gap-4 hover:border-brand-orange/50 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-brand-orange/10 border border-brand-orange/20 text-brand-orange flex items-center justify-center text-xl shrink-0">
+                        <i class="fas fa-ban"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white mb-1">No cobramos Mantenimiento Mensual</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed">La web es tu propiedad absoluta. Podés cambiar precios, fotos y platos vos mismo sin mensualidades de mantenimiento.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Características del desarrollo web autoadministrable -->
+    <section id="caracteristicas" class="py-16 bg-brand-bg border-t border-brand-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <div class="inline-flex items-center gap-2 text-brand-orange text-xs font-bold uppercase tracking-wider mb-2">
+                    <i class="fas fa-cogs"></i> Plan Diseño Web Autoadministrable
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">Características de nuestro desarrollo web autoadministrable</h2>
+                <p class="text-gray-400 text-sm">Plataforma técnica de vanguardia para gestionar todo el contenido digital de tu empresa en un solo lugar.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-brand-card/70 border border-brand-border p-6 rounded-2xl hover:border-brand-orange/40 transition-all">
+                    <i class="fas fa-sliders-h text-3xl text-brand-orange mb-4 block"></i>
+                    <h3 class="text-lg font-bold text-white mb-2">Gestión Total del Contenido</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Tome el control total de su contenido, imágenes, productos, menús y servicios sin necesidad de conocimientos técnicos.</p>
+                </div>
+
+                <div class="bg-brand-card/70 border border-brand-border p-6 rounded-2xl hover:border-brand-orange/40 transition-all">
+                    <i class="fas fa-user-cog text-3xl text-brand-orange mb-4 block"></i>
+                    <h3 class="text-lg font-bold text-white mb-2">Panel de Administración Intuitivo</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Cómodo y fácil de usar para administrar las funciones, precios de temporada y secciones principales de tu sitio web.</p>
+                </div>
+
+                <div class="bg-brand-card/70 border border-brand-border p-6 rounded-2xl hover:border-brand-orange/40 transition-all">
+                    <i class="fas fa-expand-arrows-alt text-3xl text-brand-orange mb-4 block"></i>
+                    <h3 class="text-lg font-bold text-white mb-2">Sistema Expandible</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Le permite crear secciones y subsecciones de forma ilimitada y agregar nuevas prestaciones según crezca tu negocio.</p>
+                </div>
+
+                <div class="bg-brand-card/70 border border-brand-border p-6 rounded-2xl hover:border-brand-orange/40 transition-all">
+                    <i class="fab fa-whatsapp text-3xl text-brand-whatsapp mb-4 block"></i>
+                    <h3 class="text-lg font-bold text-white mb-2">Integración con WhatsApp</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Comunicación instantánea entre los visitantes del sitio y tu recepción o local comercial para responder dudas al instante.</p>
+                </div>
+
+                <div class="bg-brand-card/70 border border-brand-border p-6 rounded-2xl hover:border-brand-orange/40 transition-all">
+                    <i class="fas fa-images text-3xl text-brand-orange mb-4 block"></i>
+                    <h3 class="text-lg font-bold text-white mb-2">Galería de Imágenes & Videos</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Muestre sus imágenes en una galería interactiva y personalizable que mejora sensiblemente el atractivo visual de sus instalaciones.</p>
+                </div>
+
+                <div class="bg-brand-card/70 border border-brand-border p-6 rounded-2xl hover:border-brand-orange/40 transition-all">
+                    <i class="fas fa-map-marked-alt text-3xl text-brand-orange mb-4 block"></i>
+                    <h3 class="text-lg font-bold text-white mb-2">Google Maps & SEO Local</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Mapa de ubicación para impulsar la visibilidad en el SEO local y permitir que los clientes lleguen usando GPS sin inconvenientes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Colaboramos con -->
+    <section class="py-16 bg-gradient-to-r from-brand-card via-[#12151e] to-brand-card border-t border-b border-brand-border">
+        <div class="max-w-5xl mx-auto px-4 text-center">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-6">Para el Diseño Web Autoadministrable colaboramos con:</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                <div class="bg-brand-bg/90 border border-brand-border p-6 rounded-2xl">
+                    <div class="flex items-center gap-3 mb-3">
+                        <i class="fas fa-camera text-xl text-brand-orange"></i>
+                        <h3 class="text-lg font-bold text-white">Fotografías e Identidad</h3>
+                    </div>
+                    <p class="text-xs text-gray-400 leading-relaxed">Si no tenés fotos propias de alta definición, seleccionamos imágenes de alta calidad de nuestro banco premium para que tu web nrezca con un diseño visual impactante y profesional alineado a tu sector.</p>
+                </div>
+
+                <div class="bg-brand-bg/90 border border-brand-border p-6 rounded-2xl">
+                    <div class="flex items-center gap-3 mb-3">
+                        <i class="fas fa-file-alt text-xl text-brand-orange"></i>
+                        <h3 class="text-lg font-bold text-white">Estructura y Textos Iniciales</h3>
+                    </div>
+                    <p class="text-xs text-gray-400 leading-relaxed">Te ayudamos a armar los contenidos clave de lanzamiento. Dejamos tus páginas de servicios, tarifas e información corporativa redactadas y optimizadas para SEO, listas para sumar material con 1 solo clic.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rubros Especializados -->
+    <section id="servicios" class="py-16 bg-brand-bg border-t border-brand-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <div class="inline-flex items-center gap-2 text-brand-orange text-xs font-bold uppercase tracking-wider mb-2">
+                    <i class="fas fa-concierge-bell"></i> Soluciones por Rubro
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">Diseño a la medida de tu actividad</h2>
+                <p class="text-gray-400 text-sm">Adaptamos la arquitectura web según el comportamiento de compra de tus clientes o huéspedes.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Cabañas & Hotelería -->
+                <div class="bg-brand-card border border-brand-border rounded-2xl p-8 hover:border-brand-orange transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 bg-brand-orange/10 border border-brand-orange/20 text-brand-orange rounded-xl flex items-center justify-center text-2xl mb-6">
+                            <i class="fas fa-campground"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Hoteles & Cabañas</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6">Galerías por categoría de habitación, tabla de servicios (WiFi, piscina, desayuno), mapa y cotizador directo al WhatsApp del complejo.</p>
+                        <ul class="space-y-3 text-xs text-gray-300 mb-6">
+                            <li class="flex items-center gap-3"><i class="fas fa-check text-brand-orange"></i> Módulo de tarifas por temporada</li>
+                            <li class="flex items-center gap-3"><i class="fas fa-check text-brand-orange"></i> Botón de reservas sin comisiones</li>
+                            <li class="flex items-center gap-3"><i class="fas fa-check text-brand-orange"></i> Integración con Google Maps & Waze</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Tiendas de Recuerdos y Alimentos Regionales -->
+                <div class="bg-brand-card border border-brand-border rounded-2xl p-8 hover:border-brand-orange transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 bg-brand-amber/10 border border-brand-amber/20 text-brand-amber rounded-xl flex items-center justify-center text-2xl mb-6">
+                            <i class="fas fa-gift"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Recuerdos & Regionales</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6">Catálogos digitales para alfajores, chocolates, artículos artesanales o suvenirs de vacaciones con carrito directo a mensajería.</p>
+                        <ul class="space-y-3 text-xs text-gray-300 mb-6">
+                            <li class="flex items-center gap-3"><i class="fas fa-check text-brand-amber"></i> Exhibición de combos de regalería</li>
+                            <li class="flex items-center gap-3"><i class="fas fa-check text-brand-amber"></i> Cobro seguro con Mercado Pago</li>
+                            <li class="flex items-center gap-3"><i class="fas fa-check text-brand-amber"></i> Opciones de envío o retiro local</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Gastronomía & Resto Bar -->
+                <div class="bg-brand-card border border-brand-border rounded-2xl p-8 hover:border-brand-orange transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 bg-brand-orange/10 border border-brand-orange/20 text-brand-orange rounded-xl flex items-center justify-center text-2xl mb-6">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Gastronomía & Cartas QR</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6">Carta digital interactiva lista para ser escaneada en mesas. Editá platos, postres y precios en 10 segundos sin volver a imprimir.</p>
+                        <ul class="space-y-3 text-xs text-gray-300 mb-6">
+                            <li class="flex items-center gap-3"><i class="fas fa-check text-brand-orange"></i> Menú QR ultra veloz para móviles</li>
+                            <li class="flex items-center gap-3"><i class="fas fa-check text-brand-orange"></i> Reserva de mesas para eventos</li>
+                            <li class="flex items-center gap-3"><i class="fas fa-check text-brand-orange"></i> Actualización de cartas del día</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mockups & Portfolio Section -->
+    <section id="maquetas" class="py-16 bg-brand-bg border-t border-brand-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-card border border-brand-border text-xs font-bold text-brand-orange mb-3">
+                        <i class="fas fa-layer-group"></i> Demos Interactivas
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Plantillas Demo en Tiempo Real</h2>
+                    <p class="text-gray-400 text-sm mt-2">Explorá maquetas para simular la experiencia de tus futuros clientes desde cualquier dispositivo.</p>
+                </div>
+                
+                <!-- Admin Add Mockup Button -->
+                <div id="admin-mockup-controls" class="hidden">
+                    <button onclick="openMockupModal()" class="bg-brand-orange hover:bg-brand-orangeHover text-white px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2">
+                        <i class="fas fa-plus"></i> Agregar Nueva Maqueta
+                    </button>
+                </div>
+            </div>
+
+            <!-- Categories Filter -->
+            <div id="mockup-filters" class="flex flex-wrap gap-2 mb-8">
+                <!-- Javascript Filters -->
+            </div>
+
+            <!-- Mockups Grid -->
+            <div id="mockups-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Javascript Mockups Grid -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="precios" class="py-16 bg-brand-bg relative border-t border-brand-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-card border border-brand-orange/40 text-xs font-bold text-brand-orange mb-3">
+                    <i class="fas fa-tags"></i> Planes y Precios
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">Planes de Desarrollo Web Autoadministrable</h2>
+                <p class="text-gray-400 text-sm sm:text-base">Iniciás tu proyecto reservando tu lugar con solo el <strong>25% de seña</strong>. El 75% restante lo abonas al ver tu web finalizada.</p>
+            </div>
+
+            <div id="services-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Javascript Plans Grid -->
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-16 bg-brand-bg border-t border-brand-border">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-3">Preguntas Frecuentes sobre Sitios Web Autoadministrables</h2>
+                <p class="text-gray-400 text-sm">Resolvemos tus dudas principales antes de contratar.</p>
+            </div>
+
+            <div class="space-y-4">
+                <details class="group bg-brand-card border border-brand-border rounded-xl p-5 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex items-center justify-between cursor-pointer text-white font-bold text-sm sm:text-base">
+                        <span>¿Qué es un sitio web autoadministrable y cómo funciona?</span>
+                        <span class="transition group-open:rotate-180 text-brand-orange"><i class="fas fa-chevron-down"></i></span>
+                    </summary>
+                    <p class="text-xs sm:text-sm text-gray-400 mt-3 leading-relaxed">
+                        Es una plataforma web desarrollada con un panel de gestión intuitivo (CMS) que te permite modificar fotos, listas de precios, menús o habitaciones sin depender de un programador ni pagar por cada actualización.
+                    </p>
+                </details>
+
+                <details class="group bg-brand-card border border-brand-border rounded-xl p-5 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex items-center justify-between cursor-pointer text-white font-bold text-sm sm:text-base">
+                        <span>¿Cuándo y cómo se abona el 75% restante?</span>
+                        <span class="transition group-open:rotate-180 text-brand-orange"><i class="fas fa-chevron-down"></i></span>
+                    </summary>
+                    <p class="text-xs sm:text-sm text-gray-400 mt-3 leading-relaxed">
+                        El 75% restante se paga únicamente cuando la página web esté terminada y subida a un link de prueba en vivo. Una vez que la navegues desde tu celular y des el visto bueno, realizás la cancelación del saldo y la publicamos en tu dominio definitivo.
+                    </p>
+                </details>
+
+                <details class="group bg-brand-card border border-brand-border rounded-xl p-5 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex items-center justify-between cursor-pointer text-white font-bold text-sm sm:text-base">
+                        <span>¿Necesito tener conocimientos técnicos de programación?</span>
+                        <span class="transition group-open:rotate-180 text-brand-orange"><i class="fas fa-chevron-down"></i></span>
+                    </summary>
+                    <p class="text-xs sm:text-sm text-gray-400 mt-3 leading-relaxed">
+                        En absoluto. Te entregamos un usuario y clave simple con un instructivo paso a paso para que puedas realizar cambios con facilidad desde tu celular o computadora.
+                    </p>
+                </details>
+
+                <details class="group bg-brand-card border border-brand-border rounded-xl p-5 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex items-center justify-between cursor-pointer text-white font-bold text-sm sm:text-base">
+                        <span>¿Cuánto tiempo demora la entrega de la página web?</span>
+                        <span class="transition group-open:rotate-180 text-brand-orange"><i class="fas fa-chevron-down"></i></span>
+                    </summary>
+                    <p class="text-xs sm:text-sm text-gray-400 mt-3 leading-relaxed">
+                        El tiempo estándar de entrega es de entre 3 a 7 días hábiles a partir de la recepción del logo, fotos e información básica de tu alojamiento o comercio.
+                    </p>
+                </details>
+
+                <details class="group bg-brand-card border border-brand-border rounded-xl p-5 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex items-center justify-between cursor-pointer text-white font-bold text-sm sm:text-base">
+                        <span>¿Qué incluye el Hosting y Dominio bonificado?</span>
+                        <span class="transition group-open:rotate-180 text-brand-orange"><i class="fas fa-chevron-down"></i></span>
+                    </summary>
+                    <p class="text-xs sm:text-sm text-gray-400 mt-3 leading-relaxed">
+                        Incluye el alta y registro de tu dominio (.com o .com.ar), almacenamiento en servidores SSL ultrarrápidos y cuentas de correo corporativo profesional sin ningún cargo extra durante los primeros 12 meses.
+                    </p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#0b0c10] border-t border-brand-border py-12 text-gray-400 text-xs sm:text-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-brand-orange text-white font-extrabold text-lg flex items-center justify-center rounded-lg">
+                        WD
+                    </div>
+                    <div>
+                        <div class="text-white font-extrabold text-base">WEB DESTINO</div>
+                        <div class="text-xs text-gray-500">Agencia de Desarrollo Web Autoadministrable & Soluciones Turísticas</div>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-6 font-medium text-xs">
+                    <a href="#inicio" class="hover:text-brand-orange transition-colors">Inicio</a>
+                    <a href="#ventajas" class="hover:text-brand-orange transition-colors">Ventajas</a>
+                    <a href="#caracteristicas" class="hover:text-brand-orange transition-colors">Características</a>
+                    <a href="#servicios" class="hover:text-brand-orange transition-colors">Rubros</a>
+                    <a href="#maquetas" class="hover:text-brand-orange transition-colors">Plantillas</a>
+                    <a href="#precios" class="hover:text-brand-orange transition-colors">Planes</a>
+                </div>
+
+                <div class="text-center md:text-right text-xs text-gray-500">
+                    © <span id="footer-year">2026</span> Web Destino. Todos los derechos reservados.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL: Ver Maqueta Demo -->
+    <div id="modal-mockup-view" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-brand-card border border-brand-border rounded-2xl max-w-2xl w-full p-6 relative overflow-hidden shadow-2xl">
+            <button onclick="closeMockupViewModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="inline-block px-3 py-1 bg-brand-orange/20 text-brand-orange border border-brand-orange/30 text-xs font-bold rounded-full mb-3" id="demo-modal-tag">
+                Hotelería & Cabañas
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-2" id="demo-modal-title">Nombre de Maqueta</h3>
+            <p class="text-gray-400 text-xs mb-4" id="demo-modal-desc">Descripción detallada de la maqueta.</p>
+            
+            <div class="bg-brand-bg rounded-xl p-4 border border-brand-border mb-6 flex items-center justify-center h-52 relative overflow-hidden">
+                <img id="demo-modal-img" src="" alt="Demo" class="max-h-full object-contain rounded-lg">
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+                <a id="demo-modal-link" href="#" target="_blank" onclick="closeMockupViewModal()" class="flex-1 bg-brand-orange hover:bg-brand-orangeHover text-white text-center py-3 rounded-xl font-bold text-sm transition-all">
+                    <i class="fab fa-whatsapp mr-2"></i> Solicitar esta Plantilla por WhatsApp
+                </a>
+                <button onclick="closeMockupViewModal()" class="bg-brand-border hover:bg-gray-700 text-white px-6 py-3 rounded-xl font-semibold text-sm transition-all">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Admin Login -->
+    <div id="modal-admin-login" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-brand-card border border-brand-border rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
+            <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-brand-orange/20 text-brand-orange flex items-center justify-center text-lg font-bold">
+                    <i class="fas fa-user-lock"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-white">Panel Administrador</h3>
+                    <p class="text-xs text-gray-400">Ingresá tu clave de administración.</p>
+                </div>
+            </div>
+
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs text-gray-300 font-semibold mb-1">Contraseña Admin</label>
+                    <input type="password" id="admin-password" required placeholder="Clave: admin123" class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-orange">
+                </div>
+                <div id="admin-error-msg" class="text-red-400 text-xs hidden">
+                    <i class="fas fa-exclamation-circle mr-1"></i> Contraseña incorrecta. Utilizá: admin123
+                </div>
+                <button type="submit" class="w-full bg-brand-orange hover:bg-brand-orangeHover text-white font-bold py-3 rounded-xl text-sm transition-all shadow-lg shadow-brand-orange/20">
+                    Ingresar al Panel
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Admin Phone Edit -->
+    <div id="modal-phone-edit" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-brand-card border border-brand-border rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
+            <button onclick="closePhoneEditModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="text-lg font-bold text-white mb-2"><i class="fab fa-whatsapp text-brand-whatsapp mr-2"></i> Cambiar Número de WhatsApp</h3>
+            <p class="text-xs text-gray-400 mb-4">Ingresá el número con código de país sin espacios (Ej: 5491155554444).</p>
+
+            <form onsubmit="handlePhoneUpdate(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs text-gray-300 font-semibold mb-1">Número WhatsApp</label>
+                    <input type="text" id="admin-phone-input" required placeholder="Ej: 5491155554444" class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-orange">
+                </div>
+                <button type="submit" class="w-full bg-brand-whatsapp text-black font-bold py-3 rounded-xl text-sm transition-all shadow-lg shadow-brand-whatsapp/20">
+                    Guardar Cambios
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Add New Mockup (Admin) -->
+    <div id="modal-mockup-add" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-brand-card border border-brand-border rounded-2xl max-w-lg w-full p-6 relative shadow-2xl">
+            <button onclick="closeMockupModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="text-lg font-bold text-white mb-4"><i class="fas fa-plus-circle text-brand-orange mr-2"></i> Agregar Nueva Maqueta Demo</h3>
+
+            <form onsubmit="handleMockupAdd(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs text-gray-300 font-semibold mb-1">Título de la Maqueta</label>
+                    <input type="text" id="mockup-title-input" required placeholder="Ej: Cabañas Los Alerces" class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-orange">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-300 font-semibold mb-1">Categoría</label>
+                    <select id="mockup-cat-input" class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-orange">
+                        <option value="hoteleria">Hotelería & Cabañas</option>
+                        <option value="gastronomia">Gastronomía & Resto Bar</option>
+                        <option value="regionales">Recuerdos & Regionales</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-300 font-semibold mb-1">Descripción Breve</label>
+                    <input type="text" id="mockup-desc-input" required placeholder="Ej: Cotizador de fechas y fotos HD." class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-orange">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-300 font-semibold mb-1">URL de Imagen Demo</label>
+                    <input type="url" id="mockup-img-input" required placeholder="https://..." class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-orange">
+                </div>
+                <button type="submit" class="w-full bg-brand-orange hover:bg-brand-orangeHover text-white font-bold py-3 rounded-xl text-sm transition-all shadow-lg shadow-brand-orange/20">
+                    Guardar Maqueta
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script App Logic -->
+    <script>
+        // State Management
+        let appState = {
+            isAdmin: false,
+            whatsappPhone: "5491155554444",
+            formattedPhone: "+54 9 11 5555-4444",
+            activeFilter: "all",
+            plans: [
+                {
+                    id: 1,
+                    title: "Plan Presencia Local",
+                    tag: "Comercio & Souvenirs",
+                    price: 120000,
+                    deposit: 30000,
+                    features: [
+                        "Diseño Web Autoadministrable 100% Móvil",
+                        "Catálogo de Productos o Souvenirs",
+                        "Botón de Pedidos por WhatsApp Directo",
+                        "Ubicación en Google Maps + SSL Gratis",
+                        "Dominio .com.ar e Hosting bonificado 1 año"
+                    ],
+                    recommended: false
+                },
+                {
+                    id: 2,
+                    title: "Plan Cabañas & Hoteles",
+                    tag: "El más Elegido para Turismo",
+                    price: 180000,
+                    deposit: 45000,
+                    features: [
+                        "Multi-sección (Cabañas, Galería, Tarifas)",
+                        "Cotizador directo a WhatsApp",
+                        "Módulo de Tarifas por Temporada",
+                        "Galerías Interactivas HD por Habitación",
+                        "Correos Electrónicos Corporativos",
+                        "Hosting + Dominio gratis por 1 año"
+                    ],
+                    recommended: true
+                },
+                {
+                    id: 3,
+                    title: "Plan Web + Meta Ads",
+                    tag: "Ecosistema de Ventas",
+                    price: 260000,
+                    deposit: 65000,
+                    features: [
+                        "Sitio Web Autoadministrable Premium",
+                        "Publicidad en Meta Ads (Instagram/Facebook)",
+                        "Segmentación Geolocalizada para Turistas",
+                        "Diseño de Creativos para Anuncios",
+                        "Soporte y optimización constante"
+                    ],
+                    recommended: false
+                }
+            ],
+            mockups: [
+                {
+                    id: 1,
+                    title: "Cabañas Los Alerces - Bariloche",
+                    category: "hoteleria",
+                    catLabel: "Hotelería & Cabañas",
+                    desc: "Maqueta con cotizador de fechas por temporada y galería interactiva por cabaña.",
+                    img: "https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&w=600&q=80"
+                },
+                {
+                    id: 2,
+                    title: "Chocolates & Alfajores del Sur",
+                    category: "regionales",
+                    catLabel: "Recuerdos & Regionales",
+                    desc: "Catálogo visual para venta de cajas de recuerdos y envíos a todo el país.",
+                    img: "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=600&q=80"
+                },
+                {
+                    id: 3,
+                    title: "Cervecería & Resto Bar Patagónico",
+                    category: "gastronomia",
+                    catLabel: "Gastronomía & Resto Bar",
+                    desc: "Carta digital QR para escaneo en mesas con cambios de precios en tiempo real.",
+                    img: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80"
+                },
+                {
+                    id: 4,
+                    title: "Posada Boutique & Spa del Valle",
+                    category: "hoteleria",
+                    catLabel: "Hotelería & Cabañas",
+                    desc: "Diseño elegante enfocado en reservas directas y muestra de servicios de relajación.",
+                    img: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80"
+                }
+            ]
+        };
+
+        // Render Functions
+        function renderPlans() {
+            const grid = document.getElementById('services-grid');
+            grid.innerHTML = appState.plans.map(plan => `
+                <div class="bg-brand-card border ${plan.recommended ? 'border-2 border-brand-orange shadow-2xl shadow-brand-orange/10 relative' : 'border-brand-border'} rounded-2xl p-8 flex flex-col justify-between transition-all hover:scale-[1.02]">
+                    ${plan.recommended ? `<div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-brand-orange text-white px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-lg"><i class="fas fa-crown mr-1"></i> ${plan.tag}</div>` : ''}
+                    <div>
+                        <div class="text-xs font-bold text-brand-orange uppercase tracking-wider mb-2">${plan.tag}</div>
+                        <h3 class="text-2xl font-extrabold text-white mb-4">${plan.title}</h3>
+                        <div class="mb-6">
+                            <div class="text-3xl sm:text-4xl font-black text-white">$${plan.price.toLocaleString('es-AR')} <span class="text-xs text-gray-400 font-normal">ARS total</span></div>
+                            <div class="text-xs font-bold text-brand-orange mt-2 bg-brand-orange/10 border border-brand-orange/30 px-3 py-1.5 rounded-lg inline-block">
+                                <i class="fas fa-wallet mr-1"></i> Seña del 25%: $${plan.deposit.toLocaleString('es-AR')} ARS
+                            </div>
+                        </div>
+                        <ul class="space-y-3 text-xs sm:text-sm text-gray-300 border-t border-brand-border/60 pt-6 mb-8">
+                            ${plan.features.map(f => `<li class="flex items-center gap-2.5"><i class="fas fa-check-circle text-brand-orange text-base"></i> <span>${f}</span></li>`).join('')}
+                        </ul>
+                    </div>
+                    <a href="https://wa.me/${appState.whatsappPhone}?text=Hola!%20Quiero%20contratar%20el%20${encodeURIComponent(plan.title)}%20con%20la%20seña%20del%2025%25." target="_blank" class="w-full text-center bg-${plan.recommended ? 'brand-orange' : 'brand-cardHover'} hover:bg-brand-orangeHover text-white py-3.5 rounded-xl font-bold text-xs sm:text-sm transition-all border border-brand-border flex items-center justify-center gap-2">
+                        <i class="fab fa-whatsapp text-lg"></i> Reservar con 25% Seña
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        function renderMockups() {
+            const grid = document.getElementById('mockups-grid');
+            const filtered = appState.activeFilter === 'all' 
+                ? appState.mockups 
+                : appState.mockups.filter(m => m.category === appState.activeFilter);
+
+            grid.innerHTML = filtered.map(m => `
+                <div class="bg-brand-card border border-brand-border rounded-2xl overflow-hidden group hover:border-brand-orange transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="h-48 overflow-hidden relative">
+                            <img src="${m.img}" alt="${m.title}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <span class="absolute top-3 left-3 bg-brand-bg/90 backdrop-blur-md text-brand-orange border border-brand-orange/30 text-[10px] font-bold px-3 py-1 rounded-full uppercase">
+                                ${m.catLabel}
+                            </span>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-lg font-bold text-white mb-2">${m.title}</h3>
+                            <p class="text-xs text-gray-400 leading-relaxed mb-4">${m.desc}</p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6">
+                        <button onclick="openMockupViewModal(${m.id})" class="w-full bg-brand-cardHover hover:bg-brand-orange text-gray-200 hover:text-white font-semibold text-xs py-2.5 rounded-xl border border-brand-border transition-all flex items-center justify-center gap-2">
+                            <i class="fas fa-eye"></i> Ver Demo Interactiva
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderFilters() {
+            const filtersNav = document.getElementById('mockup-filters');
+            const categories = [
+                { id: 'all', label: 'Todas las Plantillas' },
+                { id: 'hoteleria', label: 'Hotelería & Cabañas' },
+                { id: 'gastronomia', label: 'Gastronomía & Restos' },
+                { id: 'regionales', label: 'Recuerdos & Regionales' }
+            ];
+
+            filtersNav.innerHTML = categories.map(c => `
+                <button onclick="setFilter('${c.id}')" class="px-4 py-2 rounded-xl text-xs font-bold transition-all border ${appState.activeFilter === c.id ? 'bg-brand-orange text-white border-brand-orange' : 'bg-brand-card text-gray-300 border-brand-border hover:border-gray-500'}">
+                    ${c.label}
+                </button>
+            `).join('');
+        }
+
+        function setFilter(cat) {
+            appState.activeFilter = cat;
+            renderFilters();
+            renderMockups();
+        }
+
+        // Modal Controls
+        function openAdminModal() { document.getElementById('modal-admin-login').classList.remove('hidden'); }
+        function closeAdminModal() { document.getElementById('modal-admin-login').classList.add('hidden'); }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const pwd = document.getElementById('admin-password').value;
+            if (pwd === 'admin123') {
+                appState.isAdmin = true;
+                closeAdminModal();
+                updateAdminUI();
+            } else {
+                document.getElementById('admin-error-msg').classList.remove('hidden');
+            }
+        }
+
+        function updateAdminUI() {
+            if (appState.isAdmin) {
+                document.getElementById('admin-banner').classList.remove('hidden');
+                document.getElementById('admin-mockup-controls').classList.remove('hidden');
+                document.getElementById('admin-btn-text').innerText = "Admin Activo";
+            } else {
+                document.getElementById('admin-banner').classList.add('hidden');
+                document.getElementById('admin-mockup-controls').classList.add('hidden');
+                document.getElementById('admin-btn-text').innerText = "Admin";
+            }
+        }
+
+        function logoutAdmin() {
+            appState.isAdmin = false;
+            updateAdminUI();
+        }
+
+        function openPhoneEditModal() {
+            document.getElementById('admin-phone-input').value = appState.whatsappPhone;
+            document.getElementById('modal-phone-edit').classList.remove('hidden');
+        }
+        function closePhoneEditModal() { document.getElementById('modal-phone-edit').classList.add('hidden'); }
+
+        function handlePhoneUpdate(e) {
+            e.preventDefault();
+            const newPhone = document.getElementById('admin-phone-input').value.trim();
+            if (newPhone) {
+                appState.whatsappPhone = newPhone;
+                document.getElementById('nav-phone-display').innerHTML = `<i class="fab fa-whatsapp text-brand-whatsapp mr-1"></i>+${newPhone}`;
+                document.getElementById('nav-whatsapp-link').href = `https://wa.me/${newPhone}`;
+                closePhoneEditModal();
+                renderPlans();
+            }
+        }
+
+        function openMockupModal() { document.getElementById('modal-mockup-add').classList.remove('hidden'); }
+        function closeMockupModal() { document.getElementById('modal-mockup-add').classList.add('hidden'); }
+
+        function handleMockupAdd(e) {
+            e.preventDefault();
+            const title = document.getElementById('mockup-title-input').value;
+            const category = document.getElementById('mockup-cat-input').value;
+            const desc = document.getElementById('mockup-desc-input').value;
+            const img = document.getElementById('mockup-img-input').value;
+
+            const catLabels = {
+                hoteleria: "Hotelería & Cabañas",
+                gastronomia: "Gastronomía & Resto Bar",
+                regionales: "Recuerdos & Regionales"
+            };
+
+            appState.mockups.unshift({
+                id: Date.now(),
+                title,
+                category,
+                catLabel: catLabels[category],
+                desc,
+                img
+            });
+            closeMockupModal();
+            renderMockups();
+        }
+
+        function openMockupViewModal(id) {
+            const m = appState.mockups.find(item => item.id === id);
+            if (m) {
+                document.getElementById('demo-modal-title').innerText = m.title;
+                document.getElementById('demo-modal-desc').innerText = m.desc;
+                document.getElementById('demo-modal-tag').innerText = m.catLabel;
+                document.getElementById('demo-modal-img').src = m.img;
+                document.getElementById('demo-modal-link').href = `https://wa.me/${appState.whatsappPhone}?text=Hola!%20Me%20interesó%20la%20plantilla%20${encodeURIComponent(m.title)}.`;
+                document.getElementById('modal-mockup-view').classList.remove('hidden');
+            }
+        }
+        function closeMockupViewModal() { document.getElementById('modal-mockup-view').classList.add('hidden'); }
+
+        // Initialize App
+        window.onload = function() {
+            renderPlans();
+            renderFilters();
+            renderMockups();
+            document.getElementById('footer-year').innerText = new Date().getFullYear();
+        };
+    </script>
+</body>
+</html>
